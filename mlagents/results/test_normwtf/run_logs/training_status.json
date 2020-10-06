@@ -1,0 +1,23 @@
+{
+    "Person": {
+        "checkpoints": [
+            {
+                "steps": 177273,
+                "file_path": "results\\test_normwtf\\Person\\Person-177273.nn",
+                "reward": 2.4970520734786987,
+                "creation_time": 1601968213.783505
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 177273,
+            "file_path": "results\\test_normwtf\\Person.nn",
+            "reward": 2.4970520734786987,
+            "creation_time": 1601968213.783505
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.1.0",
+        "mlagents_version": "0.20.0",
+        "tensorflow_version": "2.3.1"
+    }
+}
