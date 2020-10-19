@@ -1,0 +1,41 @@
+{
+    "Person": {
+        "checkpoints": [
+            {
+                "steps": 1499960,
+                "file_path": "results\\crowd_pretraining1\\Person\\Person-1499960.nn",
+                "reward": 33.26451504230499,
+                "creation_time": 1602347861.6081665
+            },
+            {
+                "steps": 1999994,
+                "file_path": "results\\crowd_pretraining1\\Person\\Person-1999994.nn",
+                "reward": 33.043474010987715,
+                "creation_time": 1602350068.9180243
+            },
+            {
+                "steps": 2499978,
+                "file_path": "results\\crowd_pretraining1\\Person\\Person-2499978.nn",
+                "reward": 21.787605687975883,
+                "creation_time": 1602352349.7769704
+            },
+            {
+                "steps": 2999958,
+                "file_path": "results\\crowd_pretraining1\\Person\\Person-2999958.nn",
+                "reward": 31.938764969507854,
+                "creation_time": 1602354600.1596434
+            },
+            {
+                "steps": 3499954,
+                "file_path": "results\\crowd_pretraining1\\Person\\Person-3499954.nn",
+                "reward": 32.701786022219395,
+                "creation_time": 1602356807.6129525
+            }
+        ]
+    },
+    "metadata": {
+        "stats_format_version": "0.1.0",
+        "mlagents_version": "0.20.0",
+        "tensorflow_version": "2.3.1"
+    }
+}

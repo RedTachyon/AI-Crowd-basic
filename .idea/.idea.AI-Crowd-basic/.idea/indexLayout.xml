@@ -25,7 +25,6 @@
       <Path>Temp</Path>
       <Path>mlagents</Path>
       <Path>obj</Path>
-      <Path>results</Path>
     </explicitExcludes>
   </component>
 </project>

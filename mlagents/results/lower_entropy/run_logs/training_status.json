@@ -1,0 +1,47 @@
+{
+    "Person": {
+        "checkpoints": [
+            {
+                "steps": 999997,
+                "file_path": "results\\lower_entropy\\Person\\Person-999997.nn",
+                "reward": 16.99159095968519,
+                "creation_time": 1602035884.0153284
+            },
+            {
+                "steps": 1499958,
+                "file_path": "results\\lower_entropy\\Person\\Person-1499958.nn",
+                "reward": 17.013633355498314,
+                "creation_time": 1602042779.3958747
+            },
+            {
+                "steps": 1999996,
+                "file_path": "results\\lower_entropy\\Person\\Person-1999996.nn",
+                "reward": 17.014198197258843,
+                "creation_time": 1602049679.0044205
+            },
+            {
+                "steps": 2499957,
+                "file_path": "results\\lower_entropy\\Person\\Person-2499957.nn",
+                "reward": 17.019379187438446,
+                "creation_time": 1602056574.1443932
+            },
+            {
+                "steps": 2550610,
+                "file_path": "results\\lower_entropy\\Person\\Person-2550610.nn",
+                "reward": 17.019334654374557,
+                "creation_time": 1602057278.1172497
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 2550610,
+            "file_path": "results\\lower_entropy\\Person.nn",
+            "reward": 17.019334654374557,
+            "creation_time": 1602057278.1172497
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.1.0",
+        "mlagents_version": "0.20.0",
+        "tensorflow_version": "2.3.1"
+    }
+}

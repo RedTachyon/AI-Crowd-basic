@@ -1,0 +1,35 @@
+{
+    "Person": {
+        "checkpoints": [
+            {
+                "steps": 499984,
+                "file_path": "results\\widemultinew\\Person\\Person-499984.nn",
+                "reward": 32.16591053149279,
+                "creation_time": 1602169219.7494228
+            },
+            {
+                "steps": 999973,
+                "file_path": "results\\widemultinew\\Person\\Person-999973.nn",
+                "reward": 30.97259239996633,
+                "creation_time": 1602170716.0643635
+            },
+            {
+                "steps": 1499936,
+                "file_path": "results\\widemultinew\\Person\\Person-1499936.nn",
+                "reward": 32.15239071846008,
+                "creation_time": 1602172134.8106174
+            },
+            {
+                "steps": 1999971,
+                "file_path": "results\\widemultinew\\Person\\Person-1999971.nn",
+                "reward": 30.823954514094762,
+                "creation_time": 1602173619.2933555
+            }
+        ]
+    },
+    "metadata": {
+        "stats_format_version": "0.1.0",
+        "mlagents_version": "0.20.0",
+        "tensorflow_version": "2.3.1"
+    }
+}

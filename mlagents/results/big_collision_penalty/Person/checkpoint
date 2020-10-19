@@ -1,0 +1,6 @@
+model_checkpoint_path: "Person-10000019.ckpt"
+all_model_checkpoint_paths: "Person-8499988.ckpt"
+all_model_checkpoint_paths: "Person-8999969.ckpt"
+all_model_checkpoint_paths: "Person-9499989.ckpt"
+all_model_checkpoint_paths: "Person-9999955.ckpt"
+all_model_checkpoint_paths: "Person-10000019.ckpt"

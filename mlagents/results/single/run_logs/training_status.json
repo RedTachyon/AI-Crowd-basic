@@ -1,0 +1,17 @@
+{
+    "Person": {
+        "checkpoints": [
+            {
+                "steps": 499000,
+                "file_path": "results\\single\\Person\\Person-499000.nn",
+                "reward": -11.131559669971466,
+                "creation_time": 1602078559.1341937
+            }
+        ]
+    },
+    "metadata": {
+        "stats_format_version": "0.1.0",
+        "mlagents_version": "0.20.0",
+        "tensorflow_version": "2.3.1"
+    }
+}
