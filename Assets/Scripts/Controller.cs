@@ -1,63 +1,64 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Net.Sockets;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
-using UnityEditor.SceneManagement;
-using UnityEngine.PlayerLoop;
-using Random = System.Random;
 
+
+// TODO: figure out the side channels for extra control?
 public class Controller : Agent
 {
-
     private Rigidbody _rigidbody;
     private Vector3 _previousPosition;
-    
+    private Vector3 _startPosition;
+    private Quaternion _startRotation;
+
     public float moveSpeed = 50f;
-    public float rotationSpeed = 2f;
+    public float rotationSpeed = 3f;
+    
+    private int _unfrozen = 1;
 
     public Transform goal;
 
     public override void Initialize()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _startPosition = transform.localPosition;
+        _startRotation = transform.localRotation;
     }
 
     public override void OnEpisodeBegin()
     {
-        // TODO: remove position observations, use only raycasts instead
-        Vector3 startPos = new Vector3(-9f, 0.25f, UnityEngine.Random.Range(-9f, 9f));
-        transform.localPosition = startPos;
-        transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
-
-        _rigidbody.velocity = Vector3.zero;
-        _rigidbody.angularVelocity = Vector3.zero;
-
-        _previousPosition = startPos;
+        // Unfreeze();
+        // Vector3 startPos = new Vector3(-9f, 0.25f, UnityEngine.Random.Range(-9f, 9f));
+        // Vector3 startPos = _startPosition;
+        // transform.localPosition = startPos;
+        // transform.localRotation = _startRotation;
+        // // transform.localRotation = Quaternion.Euler(0f, 90f, 0f);
+        //
+        // _rigidbody.velocity = Vector3.zero;
+        // _rigidbody.angularVelocity = Vector3.zero;
+        //
+        // _previousPosition = startPos;
 
 
     }
 
     public override void OnActionReceived(float[] vectorAction)
     {
-        // TODO: change to discrete actions?
         // Forward velocity
-        var linearSpeed = Mathf.Clamp(vectorAction[0], -0.3f, 1.0f);
-        var angularSpeed = Mathf.Clamp(vectorAction[1], -1f, 1f);
+        var linearSpeed = _unfrozen * Mathf.Clamp(vectorAction[0], -0.3f, 1.0f);
         
-        Vector3 velocity = transform.forward * linearSpeed * moveSpeed;
-        // Debug.Log(vectorAction[0]);
-        // _rigidbody.velocity = velocity;
-        _rigidbody.AddForce(velocity);
+        // Angular velocity
+        var angularSpeed = _unfrozen * Mathf.Clamp(vectorAction[1], -1f, 1f);
+        
+        // Apply the force
+        Vector3 force = transform.forward * linearSpeed * moveSpeed;
+        _rigidbody.AddForce(force);
 
-        // Rotation
-        // var rotateDir = transform.up * vectorAction[1];
-        // transform.Rotate(rotateDir, Time.fixedDeltaTime * rotationSpeed);
-        
+        // Apply the rotation
         Vector3 rotation = transform.rotation.eulerAngles + Vector3.up * angularSpeed * rotationSpeed;
         _rigidbody.MoveRotation(Quaternion.Euler(rotation));
+        
     }
 
     public override void Heuristic(float[] actionsOut)
@@ -70,6 +71,7 @@ public class Controller : Agent
         
         if (Input.GetKey(KeyCode.D)) rotationValue = 1f;
         if (Input.GetKey(KeyCode.A)) rotationValue = -1f;
+        
 
         
         actionsOut[0] = forwardValue;
@@ -78,6 +80,7 @@ public class Controller : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
+        
         Vector3 position = transform.localPosition;
         Vector3 rotation = transform.localRotation.eulerAngles;
         Vector3 velocity = _rigidbody.velocity;
@@ -87,17 +90,12 @@ public class Controller : Agent
         sensor.AddObservation(position.x / 20f);
         sensor.AddObservation(position.z / 20f);
         sensor.AddObservation(rotation.y / 360f);
-        // sensor.AddObservation(velocity.x);
-        // sensor.AddObservation(velocity.z);
-        // sensor.AddObservation(angularVelocity);
-        // sensor.AddObservation(goalPosition);
         
-        // Debug.Log($"Position {position}");
-        // Debug.Log($"Rotation {rotation}");
-        // Debug.Log($"Velocity {velocity}");
-        // Debug.Log($"Angular {angularVelocity}");
-        // Debug.Log($"Goal {goalPosition}");
-        // Debug.Log($"Reward {GetCumulativeReward()}");
+        sensor.AddObservation(goalPosition.x / 20f);
+        sensor.AddObservation(goalPosition.z / 20f);
+        
+        sensor.AddObservation(_unfrozen);
+
         
         // Compute the distance-based reward
         var prevDistance = Vector3.Distance(_previousPosition, goalPosition);
@@ -109,16 +107,17 @@ public class Controller : Agent
         // Debug.Log($"Distance difference {diff}");
 
         _previousPosition = position;
+
     }
 
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Goal"))
+        if (other == goal.GetComponent<Collider>())
         {
             AddReward(2f);
             Debug.Log("Got the goal!");
-            EndEpisode();
+            GetComponentInParent<Manager>().ReachGoal(this);
         }
     }
 
@@ -126,9 +125,36 @@ public class Controller : Agent
     {
         if (other.collider.CompareTag("Obstacle") || other.collider.CompareTag("Agent"))
         {
-            AddReward(-0.5f);
+            AddReward(-0.1f);
             Debug.Log($"Collision with an {other.collider.tag}!");
         }
     }
+    
+    public void Freeze()
+    {
+        _unfrozen = 0;
+        _rigidbody.constraints = _rigidbody.constraints |
+                                 RigidbodyConstraints.FreezePositionX | 
+                                 RigidbodyConstraints.FreezePositionZ | 
+                                 RigidbodyConstraints.FreezeRotationY;
+        
+        GetComponent<Controller>().enabled = false;
+        // GetComponent<DecisionRequester>().enabled = false;
+        // GetComponent<DecisionRequester>().DecisionPeriod = Int32.MaxValue;
+        
+    }
 
+    public void Unfreeze()
+    {
+        GetComponent<Controller>().enabled = true;
+        // GetComponent<DecisionRequester>().enabled = true;
+        // GetComponent<DecisionRequester>().DecisionPeriod = 5;
+
+        
+        _unfrozen = 1;
+        _rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
+        _rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionZ;
+        _rigidbody.constraints &= ~RigidbodyConstraints.FreezeRotationY;
+    }
+    
 }
