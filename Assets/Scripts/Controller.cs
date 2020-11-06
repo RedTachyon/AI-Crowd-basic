@@ -45,6 +45,8 @@ public class Controller : Agent
 
     public override void OnActionReceived(float[] vectorAction)
     {
+        // TODO: consider changing the environment dynamics
+        
         // Forward velocity
         var linearSpeed = _unfrozen * Mathf.Clamp(vectorAction[0], -0.3f, 1.0f);
         
@@ -98,15 +100,15 @@ public class Controller : Agent
 
         
         // Compute the distance-based reward
-        var prevDistance = Vector3.Distance(_previousPosition, goalPosition);
+        var prevDistance = Vector3.Distance(PreviousPosition, goalPosition);
         var currentDistance = Vector3.Distance(position, goalPosition);
         var diff = prevDistance - currentDistance;
-        AddReward(2f * diff);  // Add reward for getting closer to the goal
-        AddReward(-1e-2f);  // Small penalty at each step
+        AddReward(1f * diff);  // Add reward for getting closer to the goal
+        AddReward(-0.01f);  // Small penalty at each step
         // Debug.Log($"Distance {currentDistance}");
         // Debug.Log($"Distance difference {diff}");
 
-        _previousPosition = position;
+        PreviousPosition = position;
 
     }
 
@@ -116,7 +118,7 @@ public class Controller : Agent
         if (other == goal.GetComponent<Collider>())
         {
             AddReward(2f);
-            Debug.Log("Got the goal!");
+            // Debug.Log("Got the goal!");
             GetComponentInParent<Manager>().ReachGoal(this);
         }
     }
@@ -125,8 +127,8 @@ public class Controller : Agent
     {
         if (other.collider.CompareTag("Obstacle") || other.collider.CompareTag("Agent"))
         {
-            AddReward(-0.1f);
-            Debug.Log($"Collision with an {other.collider.tag}!");
+            AddReward(-0.01f);
+            // Debug.Log($"Collision with an {other.collider.tag}!");
         }
     }
     
@@ -137,6 +139,8 @@ public class Controller : Agent
                                  RigidbodyConstraints.FreezePositionX | 
                                  RigidbodyConstraints.FreezePositionZ | 
                                  RigidbodyConstraints.FreezeRotationY;
+        
+        Debug.Log("Freezing agent");
         
         GetComponent<Controller>().enabled = false;
         // GetComponent<DecisionRequester>().enabled = false;
@@ -150,11 +154,18 @@ public class Controller : Agent
         // GetComponent<DecisionRequester>().enabled = true;
         // GetComponent<DecisionRequester>().DecisionPeriod = 5;
 
+        Debug.Log("Unfreezing agent");
+
         
         _unfrozen = 1;
         _rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionX;
         _rigidbody.constraints &= ~RigidbodyConstraints.FreezePositionZ;
         _rigidbody.constraints &= ~RigidbodyConstraints.FreezeRotationY;
     }
-    
+
+    public Vector3 PreviousPosition
+    {
+        get => _previousPosition;
+        set => _previousPosition = value;
+    }
 }

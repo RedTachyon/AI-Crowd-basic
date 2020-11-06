@@ -70,13 +70,13 @@ public class Manager : Agent
                 agent.GetComponent<Rigidbody>().velocity = Vector3.zero;
                 agent.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         
-                // agent._previousPosition = startPos;
+                agent.GetComponent<Controller>().PreviousPosition = _startPos[agent];
             }
         }
     }
 
-    private void OnDestroy()
+    public override void Heuristic(float[] actionsOut)
     {
-        // SideChannelsManager.UnregisterSideChannel(_endChannel);
+        
     }
 }
